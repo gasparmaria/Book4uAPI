@@ -11,5 +11,15 @@ namespace Book4uAPI.Models
         public string login { get; set; }
         public string senha { get; set; }
         public string nome { get; set; }
+
+        public Usuario() { }
+
+        public Usuario(int IdUsuario, string Login, string Senha, string Nome)
+        {
+            idUsuario = IdUsuario;
+            login = Login;
+            senha = Senha;
+            nome = Nome;
+        }
     }
 }

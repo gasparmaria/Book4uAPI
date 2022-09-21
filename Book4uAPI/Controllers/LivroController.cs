@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Book4uAPI.Models;
+using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -9,31 +11,16 @@ namespace Book4uAPI.Controllers
 {
     public class LivroController : ApiController
     {
-        // GET: api/Livro
-        public IEnumerable<string> Get()
+        DBConnection dbConnection;
+
+        public List<Livro> Get(int id)
         {
-            return new string[] { "value1", "value2" };
+            return dbConnection.ListarLivros();
         }
 
-        // GET: api/Livro/5
-        public string Get(int id)
+        public string GetSpecified(string titulo)
         {
-            return "value";
-        }
-
-        // POST: api/Livro
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT: api/Livro/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/Livro/5
-        public void Delete(int id)
-        {
+            return dbConnection.BuscarLivro(titulo);
         }
     }
 }

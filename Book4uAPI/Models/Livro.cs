@@ -7,21 +7,19 @@ namespace Book4uAPI.Models
 {
     public class Livro
     {
-        public int idLivro { get; set; }
-        public string detalhes { get; set; }
-        public int numPag { get; set; }
+        public string idLivro { get; set; }
         public string titulo { get; set; }
         public string autor { get; set; }
+        public string link { get; set; }
 
         public Livro() { }
 
-        public Livro(int IdLivro, string Detalhes, int NumPag, string Titulo, string Autor)
+        public Livro(string IdLivro, string Titulo, string Autor, string Link)
         {
             this.idLivro = IdLivro;
-            this.detalhes = Detalhes;
-            this.numPag = NumPag;
             this.titulo = Titulo;   
             this.autor = Autor;
+            this.link = Link;
         }
     }
 }

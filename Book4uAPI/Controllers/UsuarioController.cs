@@ -1,39 +1,32 @@
-﻿using System;
+﻿using Book4uAPI.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.Remoting.Messaging;
 using System.Web.Http;
+using System.Web.UI.WebControls;
 
 namespace Book4uAPI.Controllers
 {
     public class UsuarioController : ApiController
     {
-        // GET: api/Usuario
-        public IEnumerable<string> Get()
+        DBConnection dbConnection;
+
+        public bool Get(string login, string senha)
         {
-            return new string[] { "value1", "value2" };
+            return dbConnection.VerificarLogin(login, senha);
         }
 
-        // GET: api/Usuario/5
-        public string Get(int id)
+        public void Post(Usuario usuario)
         {
-            return "value";
+            dbConnection.CadastrarUsuario(usuario);
         }
 
-        // POST: api/Usuario
-        public void Post([FromBody]string value)
+        public void Put(Usuario usuario)
         {
-        }
-
-        // PUT: api/Usuario/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/Usuario/5
-        public void Delete(int id)
-        {
+            dbConnection.EditarUsuario(usuario);
         }
     }
 }

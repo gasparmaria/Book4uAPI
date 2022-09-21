@@ -7,7 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace Book4uAPI.Controllers
+namespace Book4uAPI.Models
 {
     public class DBConnection 
     {
@@ -31,36 +31,46 @@ namespace Book4uAPI.Controllers
             conn2.Open();
         }
 
-        public List<Livro> BuscaTodos()
+        public List<Livro> ListarLivros()
         {
             MySqlDataReader reader;
             sql = "SELECT * FROM tbLivro;";
             MySqlCommand cmd = new MySqlCommand(sql, conn2);
             reader = cmd.ExecuteReader();
-            List<Livro> l = new List<Livro>();
+            List<Livro> lista = new List<Livro>();
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    l.Add(new Livro(int.Parse(reader["idLivro"].ToString()), reader["detalhes"].ToString(), int.Parse(reader["numPag"].ToString()), reader["titulo"].ToString(), reader["autor"].ToString()));
+                    lista.Add(new Livro(reader["idLivro"].ToString(), reader["titulo"].ToString(), reader["autor"].ToString(), reader["link"].ToString()));
 
                 }
             }
-            return l;
+            return lista;
         }
 
         public String BuscarLivro(string titulo)
         {
-            MySqlDataReader reader;
             sql = String.Format("SELECT * FROM tbLivro WHERE titulo = {0}", titulo);
             MySqlCommand cmd = new MySqlCommand(sql, conn2);
             var dados = cmd.ExecuteReader();
             return dados.ToString();
         }
 
+        public bool VerificarLogin(string login, string senha)
+        {
+            sql = String.Format("SELECT * FROM tbUsuario WHERE login = {0} AND senha = {1}", login, senha);
+            MySqlCommand cmd = new MySqlCommand(sql, conn2);
+            var dados = cmd.ExecuteReader();
+
+            if (dados.HasRows)
+                return true;
+            else
+                return false;
+        }
+
         public void CadastrarUsuario(Usuario usuario)
         {
-            MySqlDataReader reader;
             MySqlCommand sql = new MySqlCommand("INSERT INTO tbUsuario VALUES(DEFAULT, @login, @senha, @nome)", conn2);
             sql.Parameters.Add("@login", MySqlDbType.VarChar).Value = usuario.login;
             sql.Parameters.Add("@senha", MySqlDbType.VarChar).Value = usuario.senha;
@@ -70,13 +80,29 @@ namespace Book4uAPI.Controllers
 
         public void EditarUsuario(Usuario usuario)
         {
-            MySqlDataReader reader;
             MySqlCommand sql = new MySqlCommand("UPDATE tbUsuario SET login = @login, senha = @senha, nome = @nome WHERE idUsuario = @idUsuario", conn2);
             sql.Parameters.Add("@login", MySqlDbType.VarChar).Value = usuario.login;
             sql.Parameters.Add("@senha", MySqlDbType.VarChar).Value = usuario.senha;
             sql.Parameters.Add("@nome", MySqlDbType.VarChar).Value = usuario.nome;
             sql.Parameters.Add("@idUsuario", MySqlDbType.Int32).Value = usuario.idUsuario;
             sql.ExecuteNonQuery();
+        }
+
+        public List<Favoritos> ListarFavoritos(int usuario)
+        {
+            MySqlDataReader reader;
+            sql = String.Format("SELECT * FROM tbFavoritos WHERE fkUsuario = {0}", usuario);
+            MySqlCommand cmd = new MySqlCommand(sql, conn2);
+            reader = cmd.ExecuteReader();
+            List<Favoritos> lista = new List<Favoritos>();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    lista.Add(new Favoritos(int.Parse(reader["fkUsuario"].ToString()), reader["fkLivro"].ToString()));
+                }
+            }
+            return lista;
         }
 
         public void Fechar()
